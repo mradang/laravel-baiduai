@@ -31,7 +31,7 @@ class BaiduAIManager
         Cache::lock($key, 10)->block(5, function () use ($key, &$token) {
             $token = Cache::get($key);
             if (empty($token)) {
-                $res = $this->request('/oauth/2.0/token', 'post', [
+                $res = $this->request('/oauth/2.0/token', 'post', [], [
                     'grant_type' => 'client_credentials',
                     'client_id' => config('baiduai.appkey'),
                     'client_secret' => config('baiduai.appsecret'),
@@ -46,11 +46,20 @@ class BaiduAIManager
         return $token;
     }
 
-    private function request(string $url, string $method, array $params = [], bool $withToken = true)
-    {
+    private function request(
+        string $url,
+        string $method,
+        array $params = [],
+        array $queryParams = [],
+        bool $withToken = true,
+    ) {
         $headers = [];
         if ($withToken) {
-            $params['access_token'] = $this->getAccessToken();
+            $queryParams['access_token'] = $this->getAccessToken();
+        }
+
+        if (count($queryParams)) {
+            $url = $url . '?' . http_build_query($queryParams);
         }
 
         $options = [
@@ -59,9 +68,13 @@ class BaiduAIManager
         ];
 
         $params = !empty($params) ? $params : null;
-        $response = Http::withHeaders($headers)->withOptions($options)->retry(3, 2000)->$method($url, $params);
+        $response = Http::asForm()
+            ->withHeaders($headers)
+            ->withOptions($options)
+            ->retry(3, 2000)
+            ->$method($url, $params);
 
-        if ($response->successful() && $response['errcode'] === 0) {
+        if ($response->successful()) {
             Log::info("[laravel-baiduai][$method][$this->baseUrl][$url]" . (string)$response);
             return $response;
         } else {
