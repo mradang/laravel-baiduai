@@ -1,0 +1,27 @@
+{
+    "name": "mradang/laravel-baiduai",
+    "description": "laravel-baiduai",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mradang",
+            "email": "mradang@163.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.2",
+        "laravel/framework": "^9.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "mradang\\LaravelBaiduAI\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "mradang\\LaravelBaiduAI\\LaravelBaiduAIServiceProvider"
+            ]
+        }
+    }
+}
