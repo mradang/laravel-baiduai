@@ -6,7 +6,6 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class BaiduAIManager
 {
@@ -21,7 +20,7 @@ class BaiduAIManager
 
     public function getAccessToken()
     {
-        $key = config('baiduai.appkey') . __FUNCTION__;
+        $key = config('baiduai.appkey').__FUNCTION__;
         $token = Cache::get($key, '');
 
         if ($token) {
@@ -59,7 +58,7 @@ class BaiduAIManager
         }
 
         if (count($queryParams)) {
-            $url = $url . '?' . http_build_query($queryParams);
+            $url = $url.'?'.http_build_query($queryParams);
         }
 
         $options = [
@@ -67,7 +66,7 @@ class BaiduAIManager
             'base_uri' => $this->baseUrl,
         ];
 
-        $params = !empty($params) ? $params : null;
+        $params = ! empty($params) ? $params : null;
         $response = Http::asForm()
             ->withHeaders($headers)
             ->withOptions($options)
@@ -75,10 +74,11 @@ class BaiduAIManager
             ->$method($url, $params);
 
         if ($response->successful()) {
-            Log::info("[laravel-baiduai][$method][$this->baseUrl][$url]" . (string)$response);
+            Log::info("[laravel-baiduai][$method][$this->baseUrl][$url]".(string) $response);
+
             return $response;
         } else {
-            Log::error("[laravel-baiduai][$method][$this->baseUrl][$url]" . (string)$response);
+            Log::error("[laravel-baiduai][$method][$this->baseUrl][$url]".(string) $response);
         }
     }
 

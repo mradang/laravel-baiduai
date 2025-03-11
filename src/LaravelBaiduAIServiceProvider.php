@@ -10,7 +10,7 @@ class LaravelBaiduAIServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/baiduai.php' => config_path('baiduai.php'),
+                __DIR__.'/../config/baiduai.php' => config_path('baiduai.php'),
             ]);
         }
     }
@@ -18,7 +18,7 @@ class LaravelBaiduAIServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/baiduai.php',
+            __DIR__.'/../config/baiduai.php',
             'baiduai'
         );
 
